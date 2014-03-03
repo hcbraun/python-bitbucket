@@ -10,6 +10,8 @@ URLS = {
     'DELETE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     # Get archive
     'GET_ARCHIVE': 'repositories/%(username)s/%(repo_slug)s/%(format)s/master/',
+
+    'POST_FORK': 'repositories/%(accountname)s/%(repo_slug)s/fork/',
 }
 
 
@@ -80,6 +82,11 @@ class Repository(object):
         """ Creates a new repository on own Bitbucket account and return it."""
         url = self.bitbucket.url('CREATE_REPO')
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, name=repo_name, scm=scm, is_private=private, **kwargs)
+
+    def fork(self, accountname, repo_slug, name, **kwargs):
+        """ Fork repository on {Bitbucket accountname}/repo_slug to {own Bitbucket account}/name and return it."""
+        url = self.bitbucket.url('POST_FORK', accountname=accountname, repo_slug=repo_slug)
+        return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, accountname=accountname, repo_slug=repo_slug, name=name, **kwargs)
 
     def update(self, repo_slug=None, **kwargs):
         """ Updates repository on own Bitbucket account and return it."""
