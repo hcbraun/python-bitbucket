@@ -13,6 +13,7 @@ class IssueCommentAuthenticatedMethodsTest(AuthenticatedBitbucketTest):
             title=u'Test Issue Bitbucket API',
             content=u'Test Issue Bitbucket API',
             responsible=self.bb.username,
+            owner=self.bb.username,
             status=u'new',
             kind=u'bug',)
         # Save latest issue's id
@@ -34,6 +35,7 @@ class IssueCommentAuthenticatedMethodsTest(AuthenticatedBitbucketTest):
         content = u'Test Issue comment Bitbucket API'
         # Test create an issue comment
         success, result = self.bb.issue.comment.create(
+            owner=self.bb.username,
             content=content)
         self.assertTrue(success)
         self.assertIsInstance(result, dict)
@@ -43,7 +45,9 @@ class IssueCommentAuthenticatedMethodsTest(AuthenticatedBitbucketTest):
 
     def _get_issue_comment(self):
         # Test get an issue comment.
-        success, result = self.bb.issue.comment.get(comment_id=self.comment_id)
+        success, result = self.bb.issue.comment.get(
+            owner=self.bb.username,
+            comment_id=self.comment_id)
         self.assertTrue(success)
         self.assertIsInstance(result, dict)
         # Test get an invalid issue comment.
@@ -54,6 +58,7 @@ class IssueCommentAuthenticatedMethodsTest(AuthenticatedBitbucketTest):
         # Test issue comment update.
         test_content = 'Test content'
         success, result = self.bb.issue.comment.update(
+            owner=self.bb.username,
             comment_id=self.comment_id,
             content=test_content)
         self.assertTrue(success)
@@ -63,6 +68,7 @@ class IssueCommentAuthenticatedMethodsTest(AuthenticatedBitbucketTest):
     def _delete_issue_comment(self):
         # Test issue comment delete.
         success, result = self.bb.issue.comment.delete(
+            owner=self.bb.username,
             comment_id=self.comment_id)
         self.assertTrue(success)
         self.assertEqual(result, '')
