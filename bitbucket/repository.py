@@ -8,6 +8,7 @@ URLS = {
     'GET_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     'UPDATE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     'DELETE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
+    'GET_USER_REPOS': 'user/repositories/',
     # Get archive
     'GET_ARCHIVE': 'repositories/%(username)s/%(repo_slug)s/%(format)s/master/',
 }
@@ -62,7 +63,7 @@ class Repository(object):
         return response
 
     def all(self, owner=None):
-        """ Return all repositories for a given owner """
+        """ Return all repositories owned by a given owner """
         owner = owner or self.bitbucket.username
         url = self.bitbucket.url('GET_USER', username=owner)
         response = self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
@@ -71,6 +72,24 @@ class Repository(object):
         except TypeError:
             pass
         return response
+
+    def team(self, include_owned=True):
+        """Return all repositories for which the authenticated user is part of
+        the team.
+
+        If include_owned is True (default), repos owned by the user are
+        included (and therefore is a superset of the repos returned by
+        all().
+
+        If include_owned is False, repositories only repositories
+        owned by other users are returned.
+
+        """
+        url = self.bitbucket.url('GET_USER_REPOS')
+        status, repos = self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
+        if status and not include_owned:
+            return status,[r for r in repos if r['owner'] != self.bitbucket.username]
+        return status, repos
 
     def get(self, repo_slug=None, owner=None):
         """ Get a single repository on Bitbucket and return it."""
