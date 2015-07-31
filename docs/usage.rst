@@ -6,7 +6,7 @@ Public
 You can access any public repository on Bitbucket, but some actions won't be available without credentials. ::
 
 	>>> from bitbucket.bitbucket import Bitbucket
-	>>> bb = Bitbucket(USERNAME, repo_name_or_slug='public_slug')
+	>>> bb = Bitbucket(username=USERNAME, repo_name_or_slug='public_slug')
 	>>> success, result = bb.repository.delete()
 	>>> print success
 	False
@@ -17,7 +17,7 @@ Private
 With the correct credentials you can access private repositories on Bitbucket. ::
 
 	>>> from bitbucket.bitbucket import Bitbucket
-	>>> bb = Bitbucket(USERNAME, PASSWORD, 'private_slug')
+	>>> bb = Bitbucket(username=USERNAME, password=PASSWORD, 'private_slug')
 	>>> success, result = bb.repository.get()
 	>>> print success, result
 	True {...}
@@ -28,7 +28,7 @@ Connect using Oauth ::
 
 	>>> import webbrowser
 	>>> from bitbucket.bitbucket import Bitbucket
-	>>> bb = Bitbucket(USERNAME)
+	>>> bb = Bitbucket(username=USERNAME)
 	>>> # First time we need to open up a browser to enter the verifier
 	>>> if not OAUTH_ACCESS_TOKEN and not OAUTH_ACCESS_TOKEN_SECRET:
 	>>>     bb.authorize(CONSUMER_KEY, CONSUMER_SECRET, 'http://localhost/')
@@ -45,7 +45,7 @@ Connect using Oauth ::
 List all repositories for a user (from `@matthew-campbell`_)::
 
 	>>> from bitbucket.bitbucket import Bitbucket
-	>>> bb = Bitbucket(USERNAME, PASSWORD)
+	>>> bb = Bitbucket(username=USERNAME, password=PASSWORD)
 	>>> success, repositories = bb.repository.all()
 	>>> for repo in sorted(repositories):
 	>>>     p = '+'
