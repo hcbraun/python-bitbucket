@@ -50,7 +50,7 @@ class PullRequest(object):
         """
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         owner = owner or self.bitbucket.username
-        url = self.bitbucket.url_v2('GET_PULLREQUEST', username=owner, repo_slug=repo_slug, issue_id=issue_id)
+        url = self.bitbucket.url_v2('GET_PULLREQUEST', username=owner, repo_slug=repo_slug, issue_id=pullrequest_id)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
     def create(self, repo_slug=None, owner=None, **kwargs):
@@ -62,7 +62,7 @@ class PullRequest(object):
 
             * title: A string representing the request title.
             * description: The description of the pull request.
-            * name: 
+            * name:
             * milestone: The milestone associated with the issue.
             * version: The version associated with the issue.
             * responsible: The username of the person responsible for the issue.
