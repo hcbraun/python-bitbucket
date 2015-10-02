@@ -122,7 +122,7 @@ class Repository(object):
         """
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         owner = owner or self.bitbucket.username
-        url = self.bitbucket.url('DELETE_REPO', username=owner, repo_slug=repo_slug)
+        url = self.bitbucket.url_v2('DELETE_REPO', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)
 
     def archive(self, repo_slug=None, owner=None, format='zip', prefix=''):
