@@ -5,6 +5,7 @@ from zipfile import ZipFile
 
 URLS = {
     'CREATE_REPO': 'repositories/',
+    'CREATE_REPO_V2': 'repositories/%(username)s/%(repo_slug)s/',
     'GET_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     'UPDATE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     'DELETE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
@@ -98,9 +99,14 @@ class Repository(object):
         url = self.bitbucket.url('GET_REPO', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
-    def create(self, repo_name, scm='git', private=True, **kwargs):
+    def create(self, repo_name, repo_slug=None, owner=None, scm='git', private=True, **kwargs):
         """ Creates a new repository on a Bitbucket account and return it."""
-        url = self.bitbucket.url('CREATE_REPO')
+        repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        if owner:
+            url = self.bitbucket.url_v2('CREATE_REPO_V2', username=owner, repo_slug=repo_slug)
+        else:
+            owner = self.bitbucket.username
+            url = self.bitbucket.url('CREATE_REPO')
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, name=repo_name, scm=scm, is_private=private, **kwargs)
 
     def update(self, repo_slug=None, owner=None, **kwargs):
@@ -116,7 +122,7 @@ class Repository(object):
         """
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         owner = owner or self.bitbucket.username
-        url = self.bitbucket.url('DELETE_REPO', username=owner, repo_slug=repo_slug)
+        url = self.bitbucket.url_v2('DELETE_REPO', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)
 
     def archive(self, repo_slug=None, owner=None, format='zip', prefix=''):
