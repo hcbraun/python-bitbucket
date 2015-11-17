@@ -99,10 +99,10 @@ class Repository(object):
         url = self.bitbucket.url('GET_REPO', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
-    def create(self, repo_name, repo_slug=None, owner=None, scm='git', private=True, **kwargs):
+    def create(self, repo_name, repo_slug=None, owner=None, scm='git', private=True, force_api_version=None, **kwargs):
         """ Creates a new repository on a Bitbucket account and return it."""
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        if owner:
+        if owner and (force_api_version is None or force_api_version == 2):
             url = self.bitbucket.url_v2('CREATE_REPO_V2', username=owner, repo_slug=repo_slug)
         else:
             owner = self.bitbucket.username
