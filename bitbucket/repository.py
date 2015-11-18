@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import json
 from tempfile import NamedTemporaryFile
 from zipfile import ZipFile
+
+from pprint import pprint
 
 
 URLS = {
@@ -139,12 +142,15 @@ class Repository(object):
         if self.bitbucket.repo_tree:
             with NamedTemporaryFile(delete=False) as archive:
                 with ZipFile(archive, 'w') as zip_archive:
-                    for name, file in self.bitbucket.repo_tree.items():
+                    for name, f in self.bitbucket.repo_tree.items():
                         with NamedTemporaryFile(delete=False) as temp_file:
+                            if isinstance(f, dict):
+                                f = json.dumps(f)
+
                             try:
-                                temp_file.write(file.encode('utf-8'))
+                                temp_file.write(f.encode('utf-8'))
                             except UnicodeDecodeError:
-                                temp_file.write(file)
+                                temp_file.write(f)
                         zip_archive.write(temp_file.name, prefix + name)
             return (True, archive.name)
         return (False, 'Could not archive your project.')
