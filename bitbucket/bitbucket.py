@@ -249,7 +249,6 @@ class Bitbucket(object):
                 'Unauthorized access, '
                 'please check your credentials.')
         elif status >= 400 and status < 500:
-            import pdb; pdb.set_trace()
             return (False, 'Service not found.')
         elif status >= 500 and status < 600:
                 return (False, 'Server error.')
