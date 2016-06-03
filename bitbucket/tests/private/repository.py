@@ -10,7 +10,8 @@ import unittest
 from bitbucket.tests.private.private import AuthenticatedBitbucketTest
 
 TEST_REPO_SLUG = "test_repository_creation"
-
+FORK_ACCOUT_NAME = "foo"
+FORK_REPO_SLUG = "bar"
 
 def skipUnlessHasGit(f):
     """ This decorator pass the test if git is not found."""
@@ -43,6 +44,15 @@ class RepositoryAuthenticatedMethodsTest(AuthenticatedBitbucketTest):
         """ Test repository creation."""
         # TODO : test private/public repository creation
         success, result = self.bb.repository.create(TEST_REPO_SLUG)
+        self.assertTrue(success)
+        self.assertIsInstance(result, dict)
+        # Delete repo
+        success, result = self.bb.repository.delete(repo_slug=TEST_REPO_SLUG)
+        assert success
+
+    def test_fork(self):
+        """ Test repository fork."""
+        success, result = self.bb.repository.fork(accountname=FORK_ACCOUNT_NAME, repo_slug=FORK_REPO_SLUG, name=TEST_REPO_SLUG)
         self.assertTrue(success)
         self.assertIsInstance(result, dict)
         # Delete repo

@@ -12,6 +12,7 @@ It allows you to access most repositories, services (hooks) and ssh keys related
 * Access public user informations
 * Access public or private repositories, tags or branches
 * Create, update or delete one of your repository
+* Fork repository
 * Access, create, update or delete a service (hook)
 * Access, create or delete an SSH key
 * Download a repository as an archive
