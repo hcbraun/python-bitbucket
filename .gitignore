@@ -16,3 +16,4 @@ build/
 
 # Ignore doc generated files
 docs/_build/
+.idea/
