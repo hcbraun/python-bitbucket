@@ -1,68 +1,68 @@
 # -*- coding: utf-8 -*-
-from .issue_comment import IssueComment
+from .pullrequest_comment import PullRequestComment
 
 
 URLS = {
     # Issues
-    'GET_ISSUES': 'repositories/%(username)s/%(repo_slug)s/issues/',
-    'GET_ISSUE': 'repositories/%(username)s/%(repo_slug)s/issues/%(issue_id)s/',
-    'CREATE_ISSUE': 'repositories/%(username)s/%(repo_slug)s/issues/',
-    'UPDATE_ISSUE': 'repositories/%(username)s/%(repo_slug)s/issues/%(issue_id)s/',
-    'DELETE_ISSUE': 'repositories/%(username)s/%(repo_slug)s/issues/%(issue_id)s/',
+    'GET_PULLREQUESTS': 'repositories/%(username)s/%(repo_slug)s/pullrequests/',
+    'GET_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
+    'CREATE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/',
+    'UPDATE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
+    'DELETE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
 }
 
 
-class Issue(object):
+class PullRequest(object):
     """ This class provide issue-related methods to Bitbucket objects."""
 
-    def __init__(self, bitbucket, issue_id=None):
+    def __init__(self, bitbucket, pullrequest_id=None):
         self.bitbucket = bitbucket
         self.bitbucket.URLS.update(URLS)
-        self.issue_id = issue_id
-        self.comment = IssueComment(self)
+        self.pullrequest_id = pullrequest_id
+        self.comment = PullRequestComment(self)
 
     @property
-    def issue_id(self):
+    def pullrequest_id(self):
         """Your repository slug name."""
-        return self._issue_id
+        return self._pullrequest_id
 
-    @issue_id.setter
-    def issue_id(self, value):
+    @pullrequest_id.setter
+    def pullrequest_id(self, value):
         if value:
-            self._issue_id = int(value)
+            self._pullrequest_id = int(value)
         elif value is None:
-            self._issue_id = None
+            self._pullrequest_id = None
 
-    @issue_id.deleter
-    def issue_id(self):
-        del self._issue_id
+    @pullrequest_id.deleter
+    def pullrequest_id(self):
+        del self._pullrequest_id
 
     def all(self, repo_slug=None, params=None, owner=None):
-        """ Get issues from one of your repositories.
+        """ Get PullRequests from one of your repositories.
         """
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('GET_ISSUES', username=owner, repo_slug=repo_slug)
+        url = self.bitbucket.url_v2('GET_PULLREQUESTS', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth, params=params)
 
-    def get(self, issue_id, repo_slug=None, owner=None):
-        """ Get an issue from one of your repositories.
+    def get(self, pullrequest_id, repo_slug=None, owner=None):
+        """ Get a PullRequest from one of your repositories.
         """
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         owner = owner or self.bitbucket.username
-        url = self.bitbucket.url('GET_ISSUE', username=owner, repo_slug=repo_slug, issue_id=issue_id)
+        url = self.bitbucket.url_v2('GET_PULLREQUEST', username=owner, repo_slug=repo_slug, issue_id=pullrequest_id)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
     def create(self, repo_slug=None, owner=None, **kwargs):
         """
-        Add an issue to one of your repositories.
+        Add a PullRequest to one of your repositories.
         Each issue require a different set of attributes,
         you can pass them as keyword arguments (attributename='attributevalue').
         Attributes are:
 
-            * title: The title of the new issue.
-            * content: The content of the new issue.
-            * component: The component associated with the issue.
+            * title: A string representing the request title.
+            * description: The description of the pull request.
+            * name:
             * milestone: The milestone associated with the issue.
             * version: The version associated with the issue.
             * responsible: The username of the person responsible for the issue.
@@ -71,7 +71,7 @@ class Issue(object):
         """
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('CREATE_ISSUE', username=owner, repo_slug=repo_slug)
+        url = self.bitbucket.url_v2('CREATE_PULLREQUEST', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, **kwargs)
 
     def update(self, issue_id, repo_slug=None, owner=None, **kwargs):
@@ -92,7 +92,7 @@ class Issue(object):
         """
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('UPDATE_ISSUE', username=owner, repo_slug=repo_slug, issue_id=issue_id)
+        url = self.bitbucket.url_v2('UPDATE_PULLREQUEST', username=owner, repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth, **kwargs)
 
     def delete(self, issue_id, repo_slug=None, owner=None):
@@ -100,5 +100,5 @@ class Issue(object):
         """
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('DELETE_ISSUE', username=owner, repo_slug=repo_slug, issue_id=issue_id)
+        url = self.bitbucket.url_v2('DELETE_PULLREQUEST', username=owner, repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)

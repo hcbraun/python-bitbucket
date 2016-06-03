@@ -18,63 +18,68 @@ class IssueComment(object):
         self.bitbucket.URLS.update(URLS)
         self.issue_id = issue.issue_id
 
-    def all(self, issue_id=None, repo_slug=None):
+    def all(self, issue_id=None, repo_slug=None , owner=None):
         """ Get issue comments from one of your repositories.
         """
         issue_id = issue_id or self.issue_id
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        owner = owner or self.bitbucket.username
         url = self.bitbucket.url('GET_COMMENTS',
-                                 username=self.bitbucket.username,
+                                 username=owner,
                                  repo_slug=repo_slug,
                                  issue_id=issue_id)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
-    def get(self, comment_id, issue_id=None, repo_slug=None):
+    def get(self, comment_id, issue_id=None, repo_slug=None, owner=None):
         """ Get an issue from one of your repositories.
         """
         issue_id = issue_id or self.issue_id
+        owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         url = self.bitbucket.url('GET_COMMENT',
-                                 username=self.bitbucket.username,
+                                 username=owner,
                                  repo_slug=repo_slug,
                                  issue_id=issue_id,
                                  comment_id=comment_id)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
-    def create(self, issue_id=None, repo_slug=None, **kwargs):
+    def create(self, issue_id=None, repo_slug=None, owner=None, **kwargs):
         """ Add an issue comment to one of your repositories.
             Each issue comment require only the content data field
             the system autopopulate the rest.
         """
         issue_id = issue_id or self.issue_id
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        owner = owner or self.bitbucket.username
         url = self.bitbucket.url('CREATE_COMMENT',
-                                 username=self.bitbucket.username,
+                                 username=owner,
                                  repo_slug=repo_slug,
                                  issue_id=issue_id)
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, **kwargs)
 
-    def update(self, comment_id, issue_id=None, repo_slug=None, **kwargs):
+    def update(self, comment_id, issue_id=None, repo_slug=None, owner=None, **kwargs):
         """ Update an issue comment in one of your repositories.
             Each issue comment require only the content data field
             the system autopopulate the rest.
         """
         issue_id = issue_id or self.issue_id
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        owner = owner or self.bitbucket.username
         url = self.bitbucket.url('UPDATE_COMMENT',
-                                 username=self.bitbucket.username,
+                                 username=owner,
                                  repo_slug=repo_slug,
                                  issue_id=issue_id,
                                  comment_id=comment_id)
         return self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth, **kwargs)
 
-    def delete(self, comment_id, issue_id=None, repo_slug=None):
+    def delete(self, comment_id, issue_id=None, repo_slug=None, owner=None):
         """ Delete an issue from one of your repositories.
         """
         issue_id = issue_id or self.issue_id
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        owner = owner or self.bitbucket.username
         url = self.bitbucket.url('DELETE_COMMENT',
-                                 username=self.bitbucket.username,
+                                 username=owner,
                                  repo_slug=repo_slug,
                                  issue_id=issue_id,
                                  comment_id=comment_id)

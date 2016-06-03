@@ -16,6 +16,7 @@ from requests_oauthlib import OAuth1
 import requests
 
 from .issue import Issue
+from .pullrequest import PullRequest
 from .repository import Repository
 from .service import Service
 from .ssh import SSH
@@ -27,6 +28,7 @@ from .deploy_key import DeployKey
 #  ========
 URLS = {
     'BASE': 'https://bitbucket.org/!api/1.0/%s',
+    'BASE_V2': 'https://bitbucket.org/!api/2.0/%s',
     # Get user profile and repos
     'GET_USER': 'users/%(username)s/',
     'GET_USER_PRIVILEGES': 'user/privileges',
@@ -55,6 +57,7 @@ class Bitbucket(object):
         self.service = Service(self)
         self.ssh = SSH(self)
         self.issue = Issue(self)
+        self.pullrequest = PullRequest(self)
         self.deploy_key = DeployKey(self)
 
         self.access_token = None
@@ -227,23 +230,26 @@ class Bitbucket(object):
         s = Session()
         resp = s.send(r.prepare())
         status = resp.status_code
-        text = resp.text
+        content = resp.content  # Includes binary
+
         error = resp.reason
         if status >= 200 and status < 300:
-            if text:
+            if content:
                 try:
-                    return (True, json.loads(text))
+                    return (True, json.loads(content))
                 except TypeError:
                     pass
                 except ValueError:
                     pass
-            return (True, text)
+
+            return (True, content)
         elif status >= 300 and status < 400:
             return (
                 False,
                 'Unauthorized access, '
                 'please check your credentials.')
         elif status >= 400 and status < 500:
+            import pdb; pdb.set_trace()
             return (False, 'Service not found.')
         elif status >= 500 and status < 600:
                 return (False, 'Server error.')
@@ -254,6 +260,11 @@ class Bitbucket(object):
         """ Construct and return the URL for a specific API service. """
         # TODO : should be static method ?
         return self.URLS['BASE'] % self.URLS[action] % kwargs
+
+    def url_v2(self, action, **kwargs):
+        """ Construct and return the URL for a specific API service. """
+        # TODO : should be static method ?
+        return self.URLS['BASE_V2'] % self.URLS[action] % kwargs
 
     #  =====================
     #  = General functions =
@@ -290,3 +301,42 @@ class Bitbucket(object):
         """ Get privledges for this user. """
         url = self.url('GET_USER_PRIVILEGES')
         return self.dispatch('GET', url, auth=self.auth)
+
+
+class BitbucketTeam(Bitbucket):
+    """ This class lets you interact with the bitbucket public API. """
+    def __init__(self, username='', password='', repo_name_or_slug='', team=None):
+        self.team = team
+        super(self.__class__, self).__init__(username=username, password=password, repo_name_or_slug=repo_name_or_slug)
+
+    #  ===================
+    #  = Getters/Setters =
+    #  ===================
+
+    @property
+    def auth(self):
+        """ Return credentials for current Bitbucket user. """
+        if self.oauth:
+            return self.oauth
+        return (self._username, self.password)
+
+    @property
+    def username(self):
+        """Return your repository's username."""
+        return self.team or Bitbucket.username.fget(self)
+
+    @username.setter
+    def username(self, value):
+        try:
+            if isinstance(value, basestring):
+                self._username = unicode(value)
+        except NameError:
+            self._username = value
+
+        if value is None:
+            self._username = None
+
+    @username.deleter
+    def username(self):
+        del self._username
+
