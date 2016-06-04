@@ -28,8 +28,9 @@ To install Python Bitbucket, simply:
 
 
 ## Documentation
-Documentation is available on [Read The Docs](https://bitbucket-api.readthedocs.org/en/latest/index.html).
+Documentation is available on [Read The Docs](https://python-bitbucket.readthedocs.io/en/latest/).
 
 ## License
 
 Python Bitbucket is an ISC Licensed library, written in Python.
+
