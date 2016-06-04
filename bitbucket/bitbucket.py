@@ -230,7 +230,7 @@ class Bitbucket(object):
         s = Session()
         resp = s.send(r.prepare())
         status = resp.status_code
-        content = resp.content  # Includes binary
+        content = resp.json()  # Includes binary
 
         error = resp.reason
         if status >= 200 and status < 300:
