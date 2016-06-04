@@ -18,6 +18,7 @@ It allows you to access most repositories, services (hooks) and ssh keys related
 * Download a repository as an archive
 * Access, create, update or delete an issue
 * Access, create, update or delete an issue comment
+* Supports Python2, Python3, PyPy.
 
 ## Installation
 
