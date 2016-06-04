@@ -100,7 +100,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Bitbucket-API', u'Bitbucket-API Documentation',
-   u'Baptiste Millou', 'Bitbucket-API', 'One line description of project.',
+  ('index', 'Python-Bitbucket', u'Python-Bitbucket Documentation',
+   u'Baptiste Millou', 'Python-Bitbucket', 'BitBucket Code Hosting API.',
    'Miscellaneous'),
 ]
