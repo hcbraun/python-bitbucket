@@ -3,25 +3,25 @@ Installation
 
 Pip
 ^^^
-Installing Bitbucket-API is simple with pip: ::
+Installing Python Bitbucket is simple with pip: ::
 
-	pip install Bitbucket-API
+	pip install git+git@github.com:Alir3z4/python-bitbucket.git#egg=bitbucket
 
 Get the Code & contribute
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-Bitbucket-API is hosted on GitHub, where the code is always available.
+Python Bitbucket is hosted on GitHub, where the code is always available.
 
 You can either clone the public repository: ::
 
-	git clone git@github.com:Sheeprider/BitBucket-api.git
+	git clone git@github.com:Alir3z4/python-bitbucket.git
 
 Download the tarball: ::
 
-	curl -OL https://github.com/Sheeprider/BitBucket-api/tarball/master
+	curl -OL https://github.com/Alir3z4/python-bitbucket/tarball/master
 
 Or, download the zipball: ::
 
-	curl -OL https://github.com/Sheeprider/Bitbucket-API/zipball/master
+	curl -OL https://github.com/Alir3z4/python-bitbucket/zipball/master
 
 Test
 ^^^^
