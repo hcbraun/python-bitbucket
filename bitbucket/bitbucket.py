@@ -84,14 +84,7 @@ class Bitbucket(object):
 
     @username.setter
     def username(self, value):
-        try:
-            if isinstance(value, basestring):
-                self._username = unicode(value)
-        except NameError:
-            self._username = value
-
-        if value is None:
-            self._username = None
+        self._username = value
 
     @username.deleter
     def username(self):
@@ -104,14 +97,7 @@ class Bitbucket(object):
 
     @password.setter
     def password(self, value):
-        try:
-            if isinstance(value, basestring):
-                self._password = unicode(value)
-        except NameError:
-            self._password = value
-
-        if value is None:
-            self._password = None
+        self._password = value
 
     @password.deleter
     def password(self):
@@ -127,12 +113,6 @@ class Bitbucket(object):
         if value is None:
             self._repo_slug = None
         else:
-            try:
-                if isinstance(value, basestring):
-                    value = unicode(value)
-            except NameError:
-                pass
-            value = value.lower()
             self._repo_slug = re.sub(r'[^a-z0-9_-]+', '-', value)
 
     @repo_slug.deleter
@@ -306,12 +286,14 @@ class BitbucketTeam(Bitbucket):
     """ This class lets you interact with the bitbucket public API. """
     def __init__(self, username='', password='', repo_name_or_slug='', team=None):
         self.team = team
-        super(self.__class__, self).__init__(username=username, password=password, repo_name_or_slug=repo_name_or_slug)
+        super(self.__class__, self).__init__(
+            username=username, password=password,
+            repo_name_or_slug=repo_name_or_slug
+        )
 
     #  ===================
     #  = Getters/Setters =
     #  ===================
-
     @property
     def auth(self):
         """ Return credentials for current Bitbucket user. """
@@ -326,14 +308,7 @@ class BitbucketTeam(Bitbucket):
 
     @username.setter
     def username(self, value):
-        try:
-            if isinstance(value, basestring):
-                self._username = unicode(value)
-        except NameError:
-            self._username = value
-
-        if value is None:
-            self._username = None
+        self._username = value
 
     @username.deleter
     def username(self):
