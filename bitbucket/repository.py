@@ -165,10 +165,10 @@ class Repository(object):
             return (True, archive.name)
         return (False, 'Could not archive your project.')
 
-    def set_user_permissions(self, repo_slug, owner, username):
+    def set_user_permissions(self, repo_slug, owner, username, access='write'):
         url = self.bitbucket.url('CREATE_PRIVILIGE', owner=owner, repo_slug=repo_slug, username=username)
-        self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth)
+        self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth, string_data=access)
 
-    def set_group_permissions(self, repo_slug, owner, group):
+    def set_group_permissions(self, repo_slug, owner, group, access='admin'):
         url = self.bitbucket.url('CREATE_GROUP_PRIVILIGE', owner=owner, repo_slug=repo_slug, group=group)
-        self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth)
+        self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth, string_data=access)
