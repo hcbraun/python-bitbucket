@@ -226,7 +226,7 @@ class Bitbucket(object):
         elif 300 <= status < 401:
             content = resp.json()
             return (
-                True, content if content else error)
+                False, content if content else error)
         elif 401 <= status < 404:
             return (
                 False,
