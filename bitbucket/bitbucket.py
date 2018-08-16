@@ -213,7 +213,7 @@ class Bitbucket(object):
         error = resp.reason
 
         if 200 <= status < 300:
-            content = resp.json()  # Includes binary
+            content = resp.json()
             if content:
                 try:
                     return True, json.loads(content)
@@ -224,8 +224,9 @@ class Bitbucket(object):
 
             return True, content
         elif 300 <= status < 401:
+            content = resp.json()
             return (
-                True, error)
+                True, content if content else error)
         elif 401 <= status < 404:
             return (
                 False,
