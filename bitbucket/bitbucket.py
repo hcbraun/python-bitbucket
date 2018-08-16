@@ -211,9 +211,11 @@ class Bitbucket(object):
         resp = s.send(r.prepare())
         status = resp.status_code
         error = resp.reason
+        content = None
 
         if 200 <= status < 300:
-            content = resp.json()
+            if status == 200:
+                content = resp.json()
             if content:
                 try:
                     return True, json.loads(content)
