@@ -17,6 +17,9 @@ URLS = {
     'GET_ARCHIVE': 'repositories/%(username)s/%(repo_slug)s/%(format)s/master/',
 
     'POST_FORK': 'repositories/%(accountname)s/%(repo_slug)s/fork/',
+
+    'CREATE_PRIVILIGE': 'privileges/%(owner)s/%(repo_slug)s/%(username)s/',
+    'CREATE_GROUP_PRIVILIGE': 'group-privileges/%(owner)s/%(repo_slug)s/%(owner)s/%(group)s/',
 }
 
 
@@ -161,3 +164,11 @@ class Repository(object):
                         zip_archive.write(temp_file.name, prefix + name)
             return (True, archive.name)
         return (False, 'Could not archive your project.')
+
+    def set_user_permissions(self, repo_slug, owner, username):
+        url = self.bitbucket.url('CREATE_PRIVILIGE', owner=owner, repo_slug=repo_slug, username=username)
+        self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth)
+
+    def set_group_permissions(self, repo_slug, owner, group):
+        url = self.bitbucket.url('CREATE_GROUP_PRIVILIGE', owner=owner, repo_slug=repo_slug, group=group)
+        self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth)

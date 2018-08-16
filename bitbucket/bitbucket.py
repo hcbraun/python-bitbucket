@@ -27,8 +27,8 @@ from .deploy_key import DeployKey
 #  = URLs =
 #  ========
 URLS = {
-    'BASE': 'https://bitbucket.org/!api/1.0/%s',
-    'BASE_V2': 'https://bitbucket.org/!api/2.0/%s',
+    'BASE': 'https://bitbucket.org/api/1.0/%s',
+    'BASE_V2': 'https://bitbucket.org/api/2.0/%s',
     # Get user profile and repos
     'GET_USER': 'users/%(username)s/',
     'GET_USER_PRIVILEGES': 'user/privileges',
@@ -196,7 +196,7 @@ class Bitbucket(object):
     #  = High lvl functions =
     #  ======================
 
-    def dispatch(self, method, url, auth=None, params=None, **kwargs):
+    def dispatch(self, method, url, auth=None, params=None, string_data=None, **kwargs):
         """ Send HTTP request, with given method,
             credentials and data to the given URL,
             and return the success and the result on success.
@@ -206,34 +206,37 @@ class Bitbucket(object):
             url=url,
             auth=auth,
             params=params,
-            data=kwargs)
+            data=string_data if string_data else kwargs)
         s = Session()
         resp = s.send(r.prepare())
         status = resp.status_code
-        content = resp.json()  # Includes binary
-
         error = resp.reason
-        if status >= 200 and status < 300:
+
+        if 200 <= status < 300:
+            content = resp.json()  # Includes binary
             if content:
                 try:
-                    return (True, json.loads(content))
+                    return True, json.loads(content)
                 except TypeError:
                     pass
                 except ValueError:
                     pass
 
-            return (True, content)
-        elif status >= 300 and status < 400:
+            return True, content
+        elif 300 <= status < 401:
+            return (
+                True, error)
+        elif 401 <= status < 404:
             return (
                 False,
                 'Unauthorized access, '
                 'please check your credentials.')
-        elif status >= 400 and status < 500:
-            return (False, 'Service not found.')
-        elif status >= 500 and status < 600:
-                return (False, 'Server error.')
+        elif 404 <= status < 500:
+            return False, 'Service not found.'
+        elif 500 <= status < 600:
+                return False, 'Server error.'
         else:
-            return (False, error)
+            return False, error
 
     def url(self, action, **kwargs):
         """ Construct and return the URL for a specific API service. """

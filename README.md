@@ -1,7 +1,5 @@
 # Python Bitbucket
 
-[![Build Status](https://travis-ci.org/Alir3z4/python-bitbucket.svg?branch=master)](https://travis-ci.org/Alir3z4/python-bitbucket)
-
 ## Overview
 
 Bitbucket has a REST API publicly available, this package provide methods to interact with it.
@@ -24,7 +22,7 @@ It allows you to access most repositories, services (hooks) and ssh keys related
 
 To install Python Bitbucket, simply:
 
-	$ pip install git+git@github.com:Alir3z4/python-bitbucket.git#egg=bitbucket
+	$ pip install git+git@github.com:rafaljanicki/python-bitbucket.git#egg=bitbucket
 
 
 ## Documentation
